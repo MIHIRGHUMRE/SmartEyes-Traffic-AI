@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block title %}Reports - Traffic Violation Dashboard{% endblock %}
+
+{% block page_title %}<i class="fas fa-chart-bar"></i> Reports & Analytics{% endblock %}
+
+{% block content %}
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">Total Violations</h5>
+                <h3>{{ stats.total_violations or 0 }}</h3>
+                <small>This month</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Resolved Cases</h5>
+                <h3>{{ stats.resolved_violations or 0 }}</h3>
+                {% set total_violations = stats.total_violations if stats.total_violations is not none else 1 %}
+                <small>{{ "%.1f"|format((stats.resolved_violations or 0) / (total_violations or 1) * 100) }}% resolution rate</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <h5 class="card-title">Pending Challans</h5>
+                <h3>{{ stats.pending_challans or 0 }}</h3>
+                <small>Awaiting payment</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h5 class="card-title">Total Revenue</h5>
+                <h3>₹{{ stats.total_revenue or 0 }}</h3>
+                <small>From challans</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Section -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Violation Types Distribution</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="violationTypesChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Monthly Trends</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="monthlyTrendsChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Detailed Metrics -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Key Performance Indicators</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6>Violation Rate</h6>
+                        <p class="h4 text-primary">{{ "%.2f"|format(stats.violation_rate or 0) }}</p>
+                        <small>Violations per user</small>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Payment Rate</h6>
+                        <p class="h4 text-success">{{ "%.1f"|format((stats.payment_rate or 0) * 100) }}%</p>
+                        <small>Challan payment rate</small>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Average Response Time</h6>
+                        <p class="h4 text-info">{{ stats.avg_response_time or 'N/A' }}</p>
+                        <small>Hours to resolve</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Export Options -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Export Reports</h5>
+            </div>
+            <div class="card-body">
+                <button class="btn btn-primary me-2" onclick="exportReport('pdf')">
+                    <i class="fas fa-file-pdf"></i> Export PDF
+                </button>
+                <button class="btn btn-success me-2" onclick="exportReport('excel')">
+                    <i class="fas fa-file-excel"></i> Export Excel
+                </button>
+                <button class="btn btn-info" onclick="exportReport('csv')">
+                    <i class="fas fa-file-csv"></i> Export CSV
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Sample chart data - in real app, this would come from the backend
+const violationTypesData = {
+    labels: ['Speeding', 'No Helmet', 'Wrong Lane', 'Parking', 'Signal Jump'],
+    datasets: [{
+        data: [35, 25, 20, 15, 5],
+        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+    }]
+};
+
+const monthlyTrendsData = {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    datasets: [{
+        label: 'Violations',
+        data: [65, 59, 80, 81, 56, 55],
+        borderColor: '#007bff',
+        tension: 0.1
+    }]
+};
+
+new Chart(document.getElementById('violationTypesChart'), {
+    type: 'doughnut',
+    data: violationTypesData
+});
+
+new Chart(document.getElementById('monthlyTrendsChart'), {
+    type: 'line',
+    data: monthlyTrendsData
+});
+
+function exportReport(format) {
+    alert(`Exporting report as ${format.toUpperCase()}...`);
+    // In real app, this would trigger a download
+}
+</script>
+{% endblock %}
