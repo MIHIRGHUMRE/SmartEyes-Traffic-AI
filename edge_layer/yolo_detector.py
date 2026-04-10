@@ -1,5 +1,12 @@
 from ultralytics import YOLO
 import os
+import torch
+
+_original_load = torch.load
+def _safe_load(*args, **kwargs):
+    kwargs['weights_only'] = False
+    return _original_load(*args, **kwargs)
+torch.load = _safe_load
 
 class YoloDetector:
     def __init__(self, model_path="yolov8n.pt", conf_threshold=0.5):

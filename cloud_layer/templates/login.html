@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SmartEyes Platform</title>
+    <style>
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-card {
+            background-color: #161b22;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            color: #58a6ff;
+            margin-bottom: 5px;
+        }
+        p {
+            color: #8b949e;
+            margin-bottom: 30px;
+        }
+        .btn-google {
+            display: inline-block;
+            background-color: #f0f6fc;
+            color: #24292f;
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid rgba(27,31,36,0.15);
+        }
+        .btn-google:hover {
+            background-color: #e6ebf1;
+        }
+        .admin-note {
+            margin-top: 20px;
+            font-size: 0.85em;
+            color: #8b949e;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <h1>SmartEyes Auth</h1>
+        <p>Sign in to access your dashboard</p>
+        
+        <a href="/login/google" class="btn-google">
+            Sign in with Google
+        </a>
+        
+        <div class="admin-note">
+            Citizens will be directed to the Web Wallet.<br>
+            Authorized Police emails will access the Admin Panel.
+        </div>
+    </div>
+</body>
+</html>

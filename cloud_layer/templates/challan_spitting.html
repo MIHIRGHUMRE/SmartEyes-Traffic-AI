@@ -2,50 +2,191 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Official E-Challan - Civic Violation</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Challan - PUBLIC SPITTING</title>
     <style>
-        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f4f6f9; color: #333; }
-        .challan-box { background: #fff; max-width: 800px; margin: 40px auto; padding: 40px; border-top: 10px solid #198754; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-radius: 8px;}
-        .header { text-align: center; border-bottom: 2px solid #eee; padding-bottom: 20px; margin-bottom: 30px; }
-        .seal { font-size: 3rem; color: #198754; }
-        .fine-amt { font-size: 2.5rem; color: #198754; font-weight: bold; }
-        .evidence-img { width: 100%; max-height: 400px; object-fit: contain; border: 2px solid #ddd; background: #fafafa; }
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #f1f5f9;
+        }
+        .challan-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+        }
+        .header {
+            background: linear-gradient(90deg, #b91c1c 0%, #ef4444 100%);
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+        .seal {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .content {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .detail-item {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .detail-item strong {
+            display: block;
+            color: #94a3b8;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        .detail-item span {
+            font-size: 18px;
+            font-weight: 600;
+            color: #f8fafc;
+        }
+        .violation-tag {
+            background: #ef4444;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .evidence-img {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border: 2px solid #334155;
+        }
+        .map-container {
+            margin-top: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #334155;
+            height: 200px;
+        }
+        .qr-section {
+            text-align: center;
+            padding: 20px;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 12px;
+            margin-top: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .fine-amount {
+            font-size: 36px;
+            color: #ef4444;
+            font-weight: 900;
+        }
+        .qr-placeholder {
+            width: 120px;
+            height: 120px;
+            background: white;
+            margin: 15px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+        .qr-placeholder img {
+            width: 100%;
+            height: 100%;
+        }
     </style>
 </head>
 <body>
-    <div class="challan-box">
+    <div class="challan-container">
         <div class="header">
-            <div class="seal">🏛️</div>
-            <h2>CIVIC AUTHORITY DEPARTMENT</h2>
-            <h4 class="text-secondary">E-Challan Notice: PUBLIC SPITTING</h4>
-            <span class="badge bg-success">Id: {{ challan.challan_id }}</span>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-6 mb-4">
-                <h5 class="fw-bold">Vehicle Registration</h5>
-                <p class="fs-4 fw-bold">{{ vehicle_number }}</p>
-                <hr>
-                <h5 class="fw-bold">Violation Details</h5>
-                <p><strong>Offense:</strong> Spitting in public spaces causing civic endangerment<br>
-                <strong>Location (GPS):</strong> {{ location }}<br>
-                <strong>Timestamp:</strong> {{ timestamp }}</p>
+            <div>
+                <h1>E-CHALLAN</h1>
+                <div style="font-size: 14px; opacity: 0.8; margin-top: 5px;">SmartEyes Traffic Authority</div>
             </div>
-            <div class="col-md-6 text-md-end mb-4">
-                <h5 class="fw-bold">Total Fine Payable</h5>
-                <p class="fine-amt">₹{{ challan.total_fine }}</p>
-                <button class="btn btn-success btn-lg w-100" onclick="window.print()">PRINT CHALLAN</button>
+            <div class="seal">OFFICIAL RECORD</div>
+        </div>
+        
+        <div class="content">
+            <div class="left-col">
+                <div class="violation-tag">TRAFFIC OFFENSE: PUBLIC SPITTING</div>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <strong>Challan ID</strong>
+                        <span>{{ challan.challan_id }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Vehicle Reg.</strong>
+                        <span style="color: #60a5fa; letter-spacing: 1px;">{{ vehicle_number }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Date & Time</strong>
+                        <span style="font-size: 14px;">{{ timestamp }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Status</strong>
+                        <span style="color: #fbbf24;">UNPAID</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 25px;">
+                    <strong style="color: #94a3b8; font-size: 12px; text-transform: uppercase;">Geo-Location Evidence</strong>
+                    <div style="font-size: 14px; margin-top: 5px; color: #cbd5e1;">{{ location }}</div>
+                    <div class="map-container">
+                        <!-- OpenStreetMap Static Embed - Dynamic Nagpur/User Coordinates -->
+                        <iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" 
+                            src="https://www.openstreetmap.org/export/embed.html?bbox={{ lon-0.05 }}%2C{{ lat-0.05 }}%2C{{ lon+0.05 }}%2C{{ lat+0.05 }}&amp;layer=mapnik&amp;marker={{ lat }}%2C{{ lon }}" 
+                            style="border: 0; filter: invert(90%) hue-rotate(180deg);">
+                        </iframe>
+                    </div>
+                </div>
             </div>
-        </div>
-        
-        <div class="evidence">
-            <h5 class="fw-bold mb-3">Photographic Evidence</h5>
-            <img src="{{ image_path }}" class="evidence-img shadow-sm" alt="Violation Evidence">
-        </div>
-        
-        <div class="mt-5 text-center text-secondary small">
-            <p>This is a computer-generated document requiring no physical signature. You are hereby ordered to pay the fine amount online within 15 days to avoid prosecution.</p>
+
+            <div class="right-col">
+                <strong style="color: #94a3b8; font-size: 12px; text-transform: uppercase; margin-bottom: 10px; display: block;">Visual Evidence</strong>
+                <img src="{{ image_path }}" alt="Violation Evidence" class="evidence-img">
+                
+                <div class="qr-section">
+                    <div style="color: #94a3b8; font-size: 12px; text-transform: uppercase; margin-bottom: 5px;">Total Fine</div>
+                    <div class="fine-amount">₹{{ challan.fine_amount }}</div>
+                    <div class="qr-placeholder" title="Scan to Pay">
+                        <!-- Dynamic QR Generation -->
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=pay_challan_helmet" alt="QR Code">
+                    </div>
+                    <div style="font-size: 11px; color: #64748b; margin-top: 10px;">Scan QR to Pay via UPI</div>
+                </div>
+            </div>
         </div>
     </div>
 </body>

@@ -24,18 +24,29 @@ def train_model():
         print("  4: number_plate")
         print("  5: spitting")
 
-    # Load a pretrained YOLOv8 nano model for transfer learning
-    model = YOLO("yolov8n.pt")
+    # Load a pretrained YOLOv8 Medium model for advanced feature extraction
+    model = YOLO("yolov8m.pt")
     
     # Train the model
     try:
         results = model.train(
             data=dataset_yaml,
-            epochs=50,       # Adjust based on dataset size and available compute
+            epochs=100,      # Increased to 100 epochs since we are augmenting heavily
             imgsz=640,       # Image size for training
-            batch=8,         # Lowered to 8 specifically to prevent CUDA out of memory on RTX 4050 6GB
+            batch=4,         # Lowered to 4 because YOLOv8m is heavier on VRAM
             name="smarteyes_model", # Save directory name inside runs/detect/
-            device="cpu"    # Uses GPU if available, else CPU
+            device="cpu",    # Falling back to CPU because CUDA driver is refusing connection
+            # Heavy Data Augmentations explicitly added to multiply initial low dataset
+            augment=True,
+            degrees=10.0,
+            translate=0.1,
+            scale=0.5,
+            shear=0.0,
+            perspective=0.0,
+            flipud=0.0,
+            fliplr=0.5,
+            mosaic=1.0,      # Combines 4 images into 1, crucial for tiny objects like splitting
+            mixup=0.2
         )
         print("Training completed successfully!")
         print("Best weights saved at: runs/detect/smarteyes_model/weights/best.pt")

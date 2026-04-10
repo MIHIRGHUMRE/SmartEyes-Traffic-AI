@@ -28,7 +28,7 @@ function initDashboard() {
 
 async function fetchDashboardData() {
     try {
-        const res = await fetch('/api/dashboard/data');
+        const res = await fetch(`/api/dashboard/data?t=${new Date().getTime()}`);
         const data = await res.json();
         
         const tbody = document.getElementById("violationTableBody");
