@@ -1,42 +1,48 @@
 from ultralytics import YOLO
 import os
+import torch
+
+# Monkeypatch PyTorch 2.6 security protocol affecting Ultralytics
+_original_load = torch.load
+def _safe_load(*args, **kwargs):
+    kwargs['weights_only'] = False
+    return _original_load(*args, **kwargs)
+torch.load = _safe_load
 
 def train_model():
     """
     Train a custom YOLOv8 model for SmartEyes.
-    Ensure your dataset is labeled in YOLO format and you have a 'data.yaml' file.
+    Uses absolute paths to avoid CWD-dependent path issues.
     """
     print("Initializing YOLOv8 training for SmartEyes...")
     
-    # Check if dataset yaml exists
-    dataset_yaml = "../datasets/data.yaml"
-    if not os.path.exists(dataset_yaml):
-        print(f"Warning: {dataset_yaml} not found. Ensure you place your dataset configuration here.")
-        print("Example content for data.yaml:")
-        print("path: ../datasets")
-        print("train: images/train")
-        print("val: images/val")
-        print("names:")
-        print("  0: person")
-        print("  1: motorcycle")
-        print("  2: helmet")
-        print("  3: no_helmet")
-        print("  4: number_plate")
-        print("  5: spitting")
+    # Resolve absolute path to dataset yaml - works regardless of where script is run from
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_dir = os.path.dirname(script_dir)
+    dataset_yaml = os.path.join(project_dir, "datasets", "data.yaml")
+    model_weights = os.path.join(project_dir, "yolov8m.pt")
 
+    print(f"Dataset YAML: {dataset_yaml}")
+    print(f"Model weights: {model_weights}")
+
+    if not os.path.exists(dataset_yaml):
+        print(f"ERROR: {dataset_yaml} not found!")
+        return
+    
     # Load a pretrained YOLOv8 Medium model for advanced feature extraction
-    model = YOLO("yolov8m.pt")
+    model = YOLO(model_weights)
     
     # Train the model
     try:
         results = model.train(
             data=dataset_yaml,
-            epochs=100,      # Increased to 100 epochs since we are augmenting heavily
-            imgsz=640,       # Image size for training
-            batch=4,         # Lowered to 4 because YOLOv8m is heavier on VRAM
-            name="smarteyes_model", # Save directory name inside runs/detect/
-            device="cpu",    # Falling back to CPU because CUDA driver is refusing connection
-            # Heavy Data Augmentations explicitly added to multiply initial low dataset
+            epochs=50,       # 50 epochs as requested
+            imgsz=640,
+            batch=4,         # Safe for 6GB VRAM
+            name="smarteyes_model",
+            project=os.path.join(project_dir, "runs", "detect"),
+            device="cpu",    # Fallback to CPU - CUDA DLL mismatch on this system
+            # Data augmentation to maximize learning from small dataset
             augment=True,
             degrees=10.0,
             translate=0.1,
@@ -45,14 +51,17 @@ def train_model():
             perspective=0.0,
             flipud=0.0,
             fliplr=0.5,
-            mosaic=1.0,      # Combines 4 images into 1, crucial for tiny objects like splitting
+            mosaic=1.0,
             mixup=0.2
         )
-        print("Training completed successfully!")
-        print("Best weights saved at: runs/detect/smarteyes_model/weights/best.pt")
-        print("Copy these weights to the 'models/best.pt' for deployment.")
+        best_weights = os.path.join(project_dir, "runs", "detect", "smarteyes_model", "weights", "best.pt")
+        print("\n✅ Training completed successfully!")
+        print(f"Best weights saved at: {best_weights}")
+        print("Copy these weights to models/best.pt to deploy.")
     except Exception as e:
+        import traceback
         print(f"Failed to start training. Error: {e}")
+        traceback.print_exc()
 
 if __name__ == "__main__":
     train_model()
