@@ -1,177 +1,55 @@
-# Traffic Violation Detection System
+# SmartEyes API & Detection System
 
-An end-to-end AI-powered traffic violation detection system with edge, cloud, and dashboard components.
-
-## Workflow
-
-1. **Camera/Video Feed/Citizen Upload** → `edge/capture.py`
-2. **Frame Extraction (OpenCV)** → `edge/frame_extraction.py` (with quality assessment)
-3. **YOLO Object Detection** → `edge/object_detection.py`
-4. **Object Tracking** → `edge/object_tracking.py` (optional)
-5. **Violation Logic Engine** → `edge/violation_logic.py`
-6. **License Plate Detection** → `edge/license_plate_detection.py`
-7. **PaddleOCR** → `edge/ocr.py`
-8. **Evidence Capture** → `edge/evidence_capture.py`
-9. **GPS Tagging** → `edge/gps_tagging.py`
-10. **User Identification** ⭐ → `edge/user_identification.py`
-11. **Database Storage** → `cloud/database.py`
-12. **E-Challan Generation** → `cloud/e_challan.py`
-13. **Incentive Calculation** ⭐ → `cloud/incentive_calculation.py`
-14. **Dashboard/Authority Notification** → `dashboard/app.py` + `cloud/notification.py`
-
-## Architecture
-
-- **Edge**: Real-time processing on device/camera
-- **Cloud**: Centralized processing, storage, and analytics
-- **Dashboard**: Web interface for monitoring and management
-
-## Quick Start
-
-### 1. Install Dependencies
-```bash
-pip install -r requirements.txt
-```
-
-### 2. Download Models
-```bash
-# Create models directory
-mkdir models
-
-# Download YOLOv8 nano model
-wget https://github.com/ultralytics/assets/releases/download/v0.0.0/yolov8n.pt -O models/yolov8n.pt
-```
-
-### 3. Run Demo
-```bash
-python demo.py
-```
-
-## Manual Setup
-
-### Run Individual Components
-
-**Start Cloud API:**
-```bash
-python cloud/main.py
-```
-API available at: http://localhost:8000
-
-**Start Dashboard:**
-```bash
-python dashboard/app.py
-```
-Dashboard available at: http://localhost:5000
-
-**Run Edge Processing:**
-```bash
-# Process video file
-python edge/main.py --video path/to/video.mp4
-
-# Live camera feed
-python edge/main.py --live --display
-```
-
-### Run All Services
-For production deployment, run each service in separate terminals:
-
-```bash
-# Terminal 1: Cloud API
-python cloud/main.py
-
-# Terminal 2: Dashboard
-python dashboard/app.py
-
-# Terminal 3: Edge Processing
-python edge/main.py --live
-```
+A complete AI-based traffic and civic violation detection system using computer vision on the Edge and centralized Cloud aggregation. 
 
 ## Features
+- **Real-Time YOLOv8 Detection**: Detect persons, motorcycles, helmets, and civic issues.
+- **Multi-Violation Logic**: Flags `TRIPLE_RIDING`, `NO_HELMET`, and `SPITTING`.
+- **Blur filtering**: Ensures only clear images are sent to the cloud.
+- **ANPR**: Uses EasyOCR server-side to extract number plates.
+- **Beautiful Dashboard**: Glassmorphic, modern web UI for authority reporting and citizen dashboard.
+- **Automated Challan Generation**.
 
-- **Real-time violation detection** with quality assessment
-- **License plate recognition** using OCR
-- **GPS tagging** for location tracking
-- **User incentives** for citizen reports ⭐
-- **E-Challan generation** with automated fines
-- **Multi-channel notifications** (email, SMS)
-- **Web dashboard** for monitoring and analytics
-- **Multi-violation detection** (single image can detect multiple violations)
+## 1. Setup Instructions
 
-## API Endpoints
+1. Install Python 3.10+
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Update your `.env` file credentials:
+   Replace `MONGO_URI` with your MongoDB Atlas string.
 
-### Cloud API (FastAPI)
-- `POST /api/report` - Report violation from edge
-- `GET /api/violations` - Get violations list
-- `GET /api/dashboard/stats` - Get dashboard statistics
-- `POST /api/user/register` - Register new user
-- `GET /api/user/{user_id}` - Get user profile
+## 2. Train Custom Model (Optional)
 
-### Dashboard (Flask)
-- `GET /` - Main dashboard
-- `GET /violations` - Violations management
-- `GET /users` - Users management
-- `GET /reports` - Analytics and reports
+We process out-of-the-box YOLO models for basic detections (`person`, `motorcycle`), but to unlock advanced civic classes:
+1. Put your traffic datasets inside `datasets/`.
+2. Run the training script:
+   ```bash
+   cd models
+   python train.py
+   ```
+3. Move your trained best weights (`best.pt`) to `models/best.pt`.
 
-## Configuration
+## 3. Running the System
 
-### Violation Rules
-Edit `config/violation_rules.json` to customize violation types and penalties.
-
-### Incentive System
-Edit `config/incentive_config.json` to adjust reward calculations.
-
-### Database
-Default: SQLite (`traffic_violation.db`)
-Change in `cloud/database.py` for production databases.
-
-## Testing
-
+### Terminal 1: Run the Cloud Layer (FastAPI + Web Application)
 ```bash
-# Run all tests
-python -m pytest tests/ -v
-
-# Run specific test
-python -m pytest tests/test_basic.py::test_imports -v
+cd cloud_layer
+uvicorn app:app --reload
 ```
+You can now open the Dashboard at: [http://localhost:8000/](http://localhost:8000/)  
+The Citizen Portal is located at: [http://localhost:8000/citizen](http://localhost:8000/citizen)
 
-## Troubleshooting
-
-### Common Issues
-
-1. **Import Errors**: Run `pip install -r requirements.txt`
-2. **Model Not Found**: Download YOLO model to `models/yolov8n.pt`
-3. **Camera Not Working**: Check camera permissions and index
-4. **OCR Not Working**: Install PaddlePaddle or use fallback mode
-
-### Environment Variables
-
+### Terminal 2: Run the Edge Camera Processor
+Provide a local video file (e.g. your dataset video) or '0' for webcam.
 ```bash
-# Disable PaddlePaddle network checks
-export PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK=True
+cd edge_layer
+python main.py --source 0
 ```
+This script will parse your camera, run AI inferences, detect violations, and HTTP POST them securely to your Cloud instance.
 
-## Development
-
-### Project Structure
-```
-MINI_PROJECT/
-├── edge/          # Edge processing modules
-├── cloud/         # Cloud API and services
-├── dashboard/     # Web dashboard
-├── models/        # ML models
-├── config/        # Configuration files
-├── data/          # Data storage
-├── templates/     # Document templates
-├── tests/         # Test suite
-└── utils/         # Utilities
-```
-
-### Adding New Features
-
-1. **Edge Features**: Add to `edge/` directory
-2. **API Endpoints**: Add to `cloud/main.py`
-3. **Dashboard Pages**: Add to `dashboard/` directory
-4. **Tests**: Add to `tests/` directory
-
-## License
-
-This project is for educational and research purposes.
+## Tech Stack
+* **CV**: YOLOv8, OpenCV, EasyOCR
+* **Backend**: FastAPI, MongoDB (Motor Async)
+* **Frontend**: HTML/JS + Bootstrap + Vanilla CSS Glassmorphism
