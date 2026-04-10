@@ -107,7 +107,6 @@ The system uses a **Hybrid Two-Layer Architecture** with local edge detection an
 - **Vanilla JavaScript (ES6+)** — Fetch API, WebRTC, DOM updates
 - **Jinja2** — Server-side templating for E-Challans
 - **OpenStreetMap (OSM)** — Free map embeds in challans
-- **Google Fonts (Inter)** — Premium typography
 
 ### DevOps
 - **Git / GitHub** — Version control
