@@ -201,11 +201,11 @@ Every confirmed violation auto-generates a digital E-Challan with:
 | Field | Value |
 |---|---|
 | Challan ID | Auto-generated `CHLN-XXXXXXXX` |
-| Vehicle Number | OCR-extracted OR Maharashtra fallback (e.g. `MH31WX9821`) |
+| Vehicle Number | OCR-extracted (e.g. `MH31WX9821`) |
 | Violation Type | `NO HELMET` / `TRIPLE RIDING` / `PUBLIC SPITTING` |
 | Fine Amount | ₹1000 / ₹500 / ₹200 (violation-specific) |
 | Date & Time | ISO timestamp |
-| Location | Reverse-geocoded Nagpur address |
+| Location | Reverse-geocoded address |
 | Map | Embedded OpenStreetMap centered on exact GPS coordinates |
 | Evidence Image | Screenshot of frame with violation |
 | QR Code | Dynamic payment QR for UPI |
