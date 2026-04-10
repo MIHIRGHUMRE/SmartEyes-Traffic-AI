@@ -30,8 +30,6 @@
 
 **SmartEyes AI** is a two-layer intelligent traffic enforcement system developed as a mini-project for academic purposes. The system leverages a custom-trained **YOLOv8m** deep learning model to detect traffic violations from camera feeds, automatically generate official **E-Challans**, and reward citizens who report violations via a gamified wallet system.
 
-The system is designed for deployment in **Nagpur, Maharashtra**, with realistic address lookups, Maharashtra-specific vehicle plate generation, and an OSM-embedded geo-tagged map in every challan.
-
 ---
 
 ## ✨ Key Features
