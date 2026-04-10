@@ -393,18 +393,6 @@ python main.py --source video.mp4 # Video file
 
 ---
 
-## 👨‍💻 Team & Credits
-
-| Role | Name |
-|---|---|
-| Project Lead & AI Engineer | Mihir Ghumre |
-| Dataset & Annotation | Traffic Violation Dataset (Roboflow) |
-| AI Framework | Ultralytics YOLOv8 |
-| OCR Engine | JaidedAI EasyOCR |
-| Geo Services | OpenStreetMap / Nominatim |
-
----
-
 ## 📜 License
 
 This project is built for academic purposes under the **CC BY 4.0** license (dataset).
