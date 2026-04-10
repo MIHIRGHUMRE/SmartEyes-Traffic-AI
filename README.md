@@ -42,7 +42,7 @@
 | 🗺️ **Dynamic Map Embed** | OpenStreetMap embedded inside each challan showing exact violation location |
 | 🔐 **Google OAuth 2.0** | Secure role-based login for both citizens and traffic authority |
 | 💰 **Incentive Wallet** | Citizens earn ₹50 tokens for every confirmed violation they report |
-| 🔡 **OCR Plate Reader** | EasyOCR-powered license plate extractor with Maharashtra fallback logic |
+| 🔡 **OCR Plate Reader** | EasyOCR-powered license plate extractor |
 | 📊 **Authority Dashboard** | Live violation stream with statistics for traffic police officers |
 | ☁️ **Cloud-Native Design** | FastAPI + MongoDB cloud backend, deployable on Render.com |
 
