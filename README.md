@@ -191,7 +191,6 @@ The traffic authority's real-time monitoring interface, protected by role-based 
 - 🔄 Live auto-refreshing violation table (every 5 seconds, cache-busted)
 - 🔗 Direct challan links (each row opens the official E-Challan)
 - 🖼️ Thumbnail preview of violation evidence image
-- 🗺️ Location column showing Nagpur road names
 
 ---
 
