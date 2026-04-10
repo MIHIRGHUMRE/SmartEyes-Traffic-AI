@@ -153,7 +153,7 @@ The custom YOLOv8m model is trained to detect the following 5 classes:
 4. If Violation Confirmed:
    ├── Save frame image to /static/uploads/
    ├── Run EasyOCR on frame → Extract license plate
-   ├── Reverse geocode GPS → Get Nagpur road name
+   ├── Reverse geocode GPS 
    ├── Generate E-Challan (with fine amount)
    ├── Save record to MongoDB
    └── Credit ₹50 to Citizen's wallet
